@@ -38,7 +38,7 @@ export async function updateUser({ userId, username, name, bio, image, path }: P
   }
 }
 
-export async function fetchUser(userId: string) {
+export async function fetchUser(userId: string | undefined) {
   try {
     connectToDB();
 
