@@ -101,7 +101,7 @@ export async function isThreadLikedByUser({ postId, userId }: { postId: string, 
   }
 }
 
-export async function likeThread({ postId, userId }: { postId: string, userId: string | undefined }) {
+export async function likeThread({ postId, userId, path }: { postId: string, userId: string | undefined, path: string }) {
   connectToDB();
 
   try {
@@ -115,14 +115,13 @@ export async function likeThread({ postId, userId }: { postId: string, userId: s
       $addToSet: { likes: user._id },
     });
 
-    revalidatePath('/');
-    revalidatePath(`/thread/${postId}`);
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function unlikeThread({ postId, userId }: { postId: string, userId: string | undefined }) {
+export async function unlikeThread({ postId, userId, path }: { postId: string, userId: string | undefined, path: string }) {
   connectToDB();
 
   try {
@@ -136,8 +135,7 @@ export async function unlikeThread({ postId, userId }: { postId: string, userId:
       $pull: { likes: user._id },
     })
 
-    revalidatePath('/');
-    revalidatePath(`/thread/${postId}`);
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
   }

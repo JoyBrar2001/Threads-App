@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { likeThread, unlikeThread } from "@/lib/actions/thread.actions";
 import { Heart } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface Props {
   liked: boolean;
@@ -12,16 +13,18 @@ interface Props {
 }
 
 export default function CardHeart({ liked, postId, userId, likes }: Props) {
+  const path = usePathname();
+  
   const [isLiked, setIsLiked] = useState(liked);
   const [likeCount, setLikeCount] = useState(likes);
 
   const handleLike = async () => {
     try {
       if (isLiked) {
-        await unlikeThread({ postId, userId });
+        await unlikeThread({ postId, userId, path });
         setLikeCount(likeCount - 1);
       } else {
-        await likeThread({ postId, userId });
+        await likeThread({ postId, userId, path });
         setLikeCount(likeCount + 1);
       }
       setIsLiked(!isLiked);
