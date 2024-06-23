@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchNumberOfLikes, isThreadLikedByUser, likeThread } from "@/lib/actions/thread.actions";
 import CardHeart from "./CardHeart";
+import { formatDateString } from "@/lib/utils";
 
 interface Props {
   id: string;
@@ -29,7 +30,10 @@ interface Props {
 
 export default async function ThreadCard({ id, currentUserId, parentId, content, author, community, createdAt, comments, isComment = false }: Props) {
   const liked = await isThreadLikedByUser({ userId: currentUserId, postId: id });
-  const likes = await fetchNumberOfLikes(id);  
+  const likes = await fetchNumberOfLikes(id);
+
+  console.log(community);
+  
 
   return (
     <article className={`flex w-full flex-col rounded-xl ${isComment ? 'px-0 xs:px-7 mb-2' : 'bg-dark-2 p-7'}`}>
@@ -108,6 +112,27 @@ export default async function ThreadCard({ id, currentUserId, parentId, content,
             </div>
           </div>
         </div>
+
+        {/* Delete Thread */}
+        {/* Comment Logos */}
+
+        {!isComment && community && (
+          <Link
+            href={`communities/${community.id}`}
+            className="mt-5 flex items-center"
+          >
+            <p className="text-subtle-medium text-gray-1">
+              {formatDateString(createdAt)} - {community.name} Community
+            </p>
+            <Image 
+              src={community.image}
+              alt={community.name}
+              width={14}
+              height={14}
+              className="ml-1 rounded-full object-cover"
+            />
+          </Link>
+        )}
       </div>
     </article>
   );

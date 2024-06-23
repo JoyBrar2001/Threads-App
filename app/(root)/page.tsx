@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const results = await fetchPosts();
+  // console.log(results);
+  
 
   const user = await currentUser();
   if (!user) return redirect('/sign-in');

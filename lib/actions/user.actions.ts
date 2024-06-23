@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import Thread from "../models/thread.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Community from "../models/community.model";
 
 interface Params {
   userId: string,
@@ -46,7 +47,10 @@ export async function fetchUser(userId: string | undefined) {
 
     return await User
       .findOne({ id: userId })
-    // .populate()
+      .populate({
+        path: "communities",
+        model: Community,
+      })
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error}`)
   }
@@ -56,21 +60,26 @@ export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
-    const threads = await User
-      .findOne({ id: userId })
-      .populate({
-        path: 'threads',
-        model: Thread,
-        populate: {
-          path: 'children',
+    const threads = await User.findOne({ id: userId }).populate({
+      path: "threads",
+      model: Thread,
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id",
+        },
+        {
+          path: "children",
           model: Thread,
           populate: {
-            path: 'author',
+            path: "author",
             model: User,
-            select: 'name image id',
+            select: "name image id",
           },
         },
-      });
+      ],
+    });
 
     return threads;
   } catch (error) {
@@ -146,5 +155,5 @@ export async function getActivity(userId: string) {
     return activity.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   } catch (error: any) {
     throw new Error(`Failed to fetch activity with error : ${error.message}`)
-  }  
+  }
 }
