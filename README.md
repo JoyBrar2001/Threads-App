@@ -23,7 +23,7 @@ Welcome to Threads App, a high-fidelity full-stack web application designed to f
 
 - **Visually Appealing Home Page**: A visually appealing home page showcasing the latest threads for an engaging user experience.
 
-![Home Page](screenshots/HomePage.png)
+![Home Page](screenshots/Homepage.png)
 
 - **Create Thread Page**: A dedicated page for users to create threads, fostering community engagement.
 
